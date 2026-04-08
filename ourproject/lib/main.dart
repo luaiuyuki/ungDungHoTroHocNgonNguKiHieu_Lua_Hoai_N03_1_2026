@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ứng dụng hỗ trợ học ngôn ngữ kí hiệu',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Ứng dụng hỗ trợ học ngôn ngữ kí hiệu'),
     );
   }
 }
@@ -56,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String ten = "Nguyễn Thị Lụa 23010369 \n Đặng Thị Thu Hoài 23010316";
 
   void _incrementCounter() {
     setState(() {
@@ -108,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
+            Text(ten),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
