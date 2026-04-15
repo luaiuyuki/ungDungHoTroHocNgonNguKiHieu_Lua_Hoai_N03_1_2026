@@ -56,7 +56,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  String ten = "Nguyễn Thị Lụa 23010369 \n Đặng Thị Thu Hoài 23010316";
 
   void _incrementCounter() {
     setState(() {
@@ -71,6 +70,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var listUser = {'name': 'Nguyễn Thị Lụa', 'createdAt': '15/04/2026'};
+    var listLearningStatistics = {
+      'bestScore': 130,
+      'currentSteak': 7,
+      'lastPraticeDate': '10/4/2026',
+      'learnedSigns': [
+        'Xin chào',
+        'Cảm ơn',
+        'Gia đình',
+        'Tạm biệt',
+        'Yêu thương',
+        'Xin lỗi'
+      ]
+    };
+    //Ép kiểu mảng ký hiệu
+    final listStudent = [{'id':1, 'name':'test1'}, {'id':2, 'name':'test2'}];
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -79,17 +95,19 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
+          // TRY THIS: Try changing the color here to a specific color (to
+          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+          // change color while the other colors stay the same.
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text('Tiến độ học tập')
+          // backgroundColor: const Color.fromARGB(255, 247, 142, 177),
+          ),
+      body: Padding(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -107,13 +125,35 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              '1.Thông tin người học:',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 255, 0, 0)),
             ),
-            Text(ten),
+            const SizedBox(height: 8),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Họ và tên: ${listUser['name']}\nNgày tham gia: ${listUser['createAt']}',
+              style: const TextStyle(fontSize: 16),
             ),
+            const Divider(height: 30, thickness: 1.5),
+            const Text(
+              '2. Thống kê học tập:',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple),
+            ),
+            const SizedBox(height: 8),
+           /* Row(
+              children: [for (var item in entries) Text(item)],
+            ),*/
+            Row(
+              children: [
+                for (var i = 0; i < listStudent.length; i++)
+                  Text('${listStudent[i]['name']}')
+              ],
+            )
           ],
         ),
       ),
