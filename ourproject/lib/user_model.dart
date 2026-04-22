@@ -1,5 +1,5 @@
 class UserModel {
-  // --- CÁC BIẾN (PROPERTIES) ---
+  int id;
   String name;
   DateTime createdAt; // Ngày tạo tài khoản
   String? email; // Email (có thể có hoặc không)
@@ -7,6 +7,7 @@ class UserModel {
 
   // Hàm khởi tạo (Constructor)
   UserModel({
+    required this.id,
     required this.name,
     required this.createdAt,
     this.email,
@@ -39,22 +40,22 @@ class UserModel {
   }
 }
 
-void main() {
-  // 1. Khởi tạo một đối tượng User cụ thể
-  UserModel user1 = UserModel(
-    name: "Nguyễn Văn A",
-    createdAt:
-        DateTime.now().subtract(Duration(days: 10)), // Tạo từ 10 ngày trước
-  );
+//  void main() {
+//   // 1. Khởi tạo một đối tượng User cụ thể
+//   UserModel user1 = UserModel(
+//     name: "Nguyễn Văn A",
+//     createdAt:
+//         DateTime.now().subtract(Duration(days: 10)), // Tạo từ 10 ngày trước
+//   );
 
-  // 2. Chạy thử các phương thức đã viết
-  print("--- Kiểm tra thông tin ---");
-  user1.displayProfile();
+//   // 2. Chạy thử các phương thức đã viết
+//   print("--- Kiểm tra thông tin ---");
+//   user1.displayProfile();
 
-  print("--- Kiểm tra số ngày tham gia ---");
-  print("Đã tham gia: ${user1.getJoiningDays()} ngày");
+//   print("--- Kiểm tra số ngày tham gia ---");
+//   print("Đã tham gia: ${user1.getJoiningDays()} ngày");
 
-  print("--- Thử cập nhật tên ---");
-  user1.updateName("Nguyễn Văn B");
-  user1.displayProfile();
-}
+//   print("--- Thử cập nhật tên ---");
+//   user1.updateName("Nguyễn Văn B");
+//   user1.displayProfile();
+// }
