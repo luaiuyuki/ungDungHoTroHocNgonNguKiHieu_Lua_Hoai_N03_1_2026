@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ứng dụng hỗ trợ học ngôn ngữ kí hiệu',
-      debugShowCheckedModeBanner: false, // Tắt chữ debug cho chuyên nghiệp
+      debugShowCheckedModeBanner: false, 
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -54,12 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
         centerTitle: true,
       ),
-      body: SingleChildScrollView( // Thêm cái này để tránh lỗi tràn màn hình (overflow)
+      body: SingleChildScrollView( 
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Căn lề trái cho đẹp
+          crossAxisAlignment: CrossAxisAlignment.start, 
           children: <Widget>[
-            // 1. Thông tin người học
+        
             const Text(
               '1. Thông tin người học:',
               style: TextStyle(
@@ -68,11 +68,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.redAccent),
             ),
             const SizedBox(height: 8),
-            Card( // Cho vào Card để nhìn chuyên nghiệp hơn
+            Card( 
               child: ListTile(
                 leading: const Icon(Icons.person, color: Colors.blue),
                 title: Text('Họ và tên: ${listUser['name']}'),
-                subtitle: Text('Ngày tham gia: ${listUser['createdAt']}'), // Đã sửa lỗi chính tả ở đây
+                subtitle: Text('Ngày tham gia: ${listUser['createdAt']}'), 
               ),
             ),
             
@@ -104,10 +104,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const SizedBox(height: 8),
 
-            // Dùng Wrap để hiển thị danh sách từ vựng thành các Chip
+           
             Wrap(
-              spacing: 8.0, // Khoảng cách ngang
-              runSpacing: 4.0, // Khoảng cách dọc
+              spacing: 8.0, 
+              runSpacing: 4.0,
               children: signs.map((sign) => Chip(
                 label: Text(sign),
                 backgroundColor: Colors.deepPurple.withOpacity(0.1),
