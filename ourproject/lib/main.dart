@@ -7,47 +7,22 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Ứng dụng hỗ trợ học ngôn ngữ kí hiệu',
+      debugShowCheckedModeBanner: false, // Tắt chữ debug cho chuyên nghiệp
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Ứng dụng hỗ trợ học ngôn ngữ kí hiệu'),
+      home: const MyHomePage(title: 'Tiến độ học tập'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -55,88 +30,55 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Dữ liệu người dùng
     var listUser = {'name': 'Nguyễn Thị Lụa', 'createdAt': '15/04/2026'};
+    
+    // Dữ liệu thống kê
     var listLearningStatistics = {
       'bestScore': 130,
       'currentSteak': 7,
       'lastPraticeDate': '10/4/2026',
       'learnedSigns': [
-        'Xin chào',
-        'Cảm ơn',
-        'Gia đình',
-        'Tạm biệt',
-        'Yêu thương',
-        'Xin lỗi'
+        'Xin chào', 'Cảm ơn', 'Gia đình', 'Tạm biệt', 'Yêu thương', 'Xin lỗi'
       ]
     };
-    //Ép kiểu mảng ký hiệu
-    final listStudent = [{'id':1, 'name':'test1'}, {'id':2, 'name':'test2'}];
 
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // Ép kiểu mảng ký hiệu để sử dụng trong Map
+    final signs = listLearningStatistics['learnedSigns'] as List<String>;
+
     return Scaffold(
       appBar: AppBar(
-          // TRY THIS: Try changing the color here to a specific color (to
-          // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-          // change color while the other colors stay the same.
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Text('Tiến độ học tập')
-          // backgroundColor: const Color.fromARGB(255, 247, 142, 177),
-          ),
-      body: Padding(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView( // Thêm cái này để tránh lỗi tràn màn hình (overflow)
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start, // Căn lề trái cho đẹp
           children: <Widget>[
+            // 1. Thông tin người học
             const Text(
-              '1.Thông tin người học:',
+              '1. Thông tin người học:',
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 255, 0, 0)),
+                  color: Colors.redAccent),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Họ và tên: ${listUser['name']}\nNgày tham gia: ${listUser['createAt']}',
-              style: const TextStyle(fontSize: 16),
+            Card( // Cho vào Card để nhìn chuyên nghiệp hơn
+              child: ListTile(
+                leading: const Icon(Icons.person, color: Colors.blue),
+                title: Text('Họ và tên: ${listUser['name']}'),
+                subtitle: Text('Ngày tham gia: ${listUser['createdAt']}'), // Đã sửa lỗi chính tả ở đây
+              ),
             ),
-            const Divider(height: 30, thickness: 1.5),
+            
+            const Divider(height: 40, thickness: 1.5),
+
+            // 2. Thống kê học tập
             const Text(
               '2. Thống kê học tập:',
               style: TextStyle(
@@ -144,24 +86,48 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.deepPurple),
             ),
-            const SizedBox(height: 8),
-           /* Row(
-              children: [for (var item in entries) Text(item)],
-            ),*/
+            const SizedBox(height: 12),
+            
+            // Hiển thị các chỉ số nhanh
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                for (var i = 0; i < listStudent.length; i++)
-                  Text('${listStudent[i]['name']}')
+                _buildStatItem("Điểm cao", "${listLearningStatistics['bestScore']}"),
+                _buildStatItem("Chuỗi ngày", "${listLearningStatistics['currentSteak']} 🔥"),
               ],
-            )
+            ),
+            
+            const SizedBox(height: 20),
+            const Text(
+              'Các ký hiệu đã thuộc:',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 8),
+
+            // Dùng Wrap để hiển thị danh sách từ vựng thành các Chip
+            Wrap(
+              spacing: 8.0, // Khoảng cách ngang
+              runSpacing: 4.0, // Khoảng cách dọc
+              children: signs.map((sign) => Chip(
+                label: Text(sign),
+                backgroundColor: Colors.deepPurple.withOpacity(0.1),
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              )).toList(),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  // Widget phụ trợ để hiển thị chỉ số cho gọn code
+  Widget _buildStatItem(String label, String value) {
+    return Column(
+      children: [
+        Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.deepPurple)),
+        Text(label, style: const TextStyle(fontSize: 14, color: Colors.grey)),
+      ],
     );
   }
 }
