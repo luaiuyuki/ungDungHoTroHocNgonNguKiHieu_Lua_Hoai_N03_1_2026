@@ -36,17 +36,29 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
             child: Container(
               width: double.infinity,
               color: Colors.purpleAccent,
-              padding: const EdgeInsets.only(top: 12.0, bottom: 12.0), 
+              padding: const EdgeInsets.symmetric(vertical: 12.0), 
               child: const Text(
                 "Ứng dụng hỗ trợ học ngôn ngữ kí hiệu",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  decoration: TextDecoration.none,
                   fontSize: 25, 
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+          ),
+
+         
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.network(
+              'https://static.wixstatic.com/media/41a9b2_372cd6c5757f47479be1577541a08d7b~mv2.png/v1/fill/w_980,h_551,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/41a9b2_372cd6c5757f47479be1577541a08d7b~mv2.png',
+              height: 150,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.broken_image, size: 80);
+              },
             ),
           ),
 
