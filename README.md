@@ -41,8 +41,11 @@ Nguyễn Thị Lụa: Trang content
 
 # Trang giao diện:
 <img width="508" height="961" alt="1" src="https://github.com/user-attachments/assets/949a99d3-e3f4-4350-bc00-e038aae7440a" />
+
 <img width="419" height="913" alt="2" src="https://github.com/user-attachments/assets/e7eb4456-fdc0-46b5-be90-f2637c05f105" />
+
 <img width="706" height="859" alt="3" src="https://github.com/user-attachments/assets/eb2a5c17-2857-4ab3-983f-81e55b83d3d6" />
+
 <img width="689" height="459" alt="4" src="https://github.com/user-attachments/assets/b4370c20-4eb7-4319-ae8c-8e854840a9b5" />
 
 
