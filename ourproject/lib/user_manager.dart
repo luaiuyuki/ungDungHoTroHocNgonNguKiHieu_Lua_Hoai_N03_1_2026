@@ -1,4 +1,5 @@
 // lib/user_manager.dart
+import 'package:flutter/foundation.dart';
 import 'user_model.dart';
 
 class UserManager {
@@ -8,14 +9,14 @@ class UserManager {
   // 1. Create (Tạo): Thêm một bản ghi mới
   void create(User user) {
     listUsers.add(user);
-    print("✅ Đã thêm người dùng: ${user.displayName}");
+    debugPrint("✅ Đã thêm người dùng: ${user.displayName}");
   }
 
   // 2. Read (Đọc): Hiển thị tất cả bản ghi
   void read() {
-    print("\n--- 📋 DANH SÁCH NGƯỜI DÙNG SASL ---");
+    debugPrint("\n--- 📋 DANH SÁCH NGƯỜI DÙNG SASL ---");
     if (listUsers.isEmpty) {
-      print("❌ Danh sách hiện đang trống.");
+      debugPrint("❌ Danh sách hiện đang trống.");
     } else {
       for (var user in listUsers) {
         user.showDetails(); // Đảm bảo trong user_model.dart đã có hàm này
@@ -33,9 +34,9 @@ class UserManager {
       if (newLevel != null) user.level = newLevel;
       if (newPoints != null) user.totalPoints = newPoints;
       
-      print("🔄 Đã cập nhật thông tin cho ID: $id");
+      debugPrint("🔄 Đã cập nhật thông tin cho ID: $id");
     } catch (e) {
-      print("⚠️ Không tìm thấy người dùng có ID: $id để sửa.");
+      debugPrint("⚠️ Không tìm thấy người dùng có ID: $id để sửa.");
     }
   }
 
@@ -45,9 +46,9 @@ class UserManager {
     listUsers.removeWhere((u) => u.uid == id);
     
     if (listUsers.length < initialLength) {
-      print("🗑️ Đã xóa ID: $id thành công.");
+      debugPrint("🗑️ Đã xóa ID: $id thành công.");
     } else {
-      print("⚠️ Không tìm thấy ID: $id để xóa.");
+      debugPrint("⚠️ Không tìm thấy ID: $id để xóa.");
     }
   }
 }
