@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'settingsScreen.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -63,6 +64,17 @@ class DashboardScreen extends StatelessWidget {
                       backgroundColor: Colors.white,
                     ),
                     child: const Text('Register', style: TextStyle(color: Colors.black)),
+                  ),
+                  const SizedBox(width: 16),
+                  IconButton(
+                    icon: const Icon(Icons.settings, color: Colors.blue),
+                    tooltip: 'Vào bài tập Get Value',
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                      );
+                    },
                   ),
                 ],
               ),

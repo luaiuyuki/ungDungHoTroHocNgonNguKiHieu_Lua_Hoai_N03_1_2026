@@ -91,8 +91,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     const SizedBox(height: 12),
                     const Text('What Should We Call You?', style: TextStyle(fontSize: 16, color: Colors.black87)),
                     const SizedBox(height: 32),
-                    TextField(
+                    TextFormField(
                       controller: _nameController,
+                      onChanged: (value) {
+                        print("User typed: $value");
+                      },
                       style: const TextStyle(fontSize: 18),
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person),
