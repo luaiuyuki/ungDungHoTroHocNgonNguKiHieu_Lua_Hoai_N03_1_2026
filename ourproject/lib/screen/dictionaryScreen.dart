@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class DictionaryScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class DictionaryScreen extends BaseScreen {
   const DictionaryScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dictionary')),
-      body: const Center(child: Text('Dictionary Screen')),
-    );
+  String get title => 'Dictionary';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Dictionary Screen'));
   }
 }

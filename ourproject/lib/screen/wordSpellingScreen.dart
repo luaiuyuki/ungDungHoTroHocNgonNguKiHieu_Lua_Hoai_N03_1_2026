@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class WordSpellingScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class WordSpellingScreen extends BaseScreen {
   const WordSpellingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Word Spelling')),
-      body: const Center(child: Text('Word Spelling Screen')),
-    );
+  String get title => 'Word Spelling';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Word Spelling Screen'));
   }
 }

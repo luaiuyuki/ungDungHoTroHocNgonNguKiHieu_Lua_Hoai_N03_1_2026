@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class SpeedChallengeScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class SpeedChallengeScreen extends BaseScreen {
   const SpeedChallengeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Speed Challenge')),
-      body: const Center(child: Text('Speed Challenge Screen')),
-    );
+  String get title => 'Speed Challenge';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Speed Challenge Screen'));
   }
 }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class DailyChallengeScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class DailyChallengeScreen extends BaseScreen {
   const DailyChallengeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Daily Challenge')),
-      body: const Center(
-        child: Text('Daily Challenge Screen'),
-      ),
-    );
+  String get title => 'Daily Challenge';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Daily Challenge Screen'));
   }
 }

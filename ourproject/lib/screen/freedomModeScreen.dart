@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class FreedomModeScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class FreedomModeScreen extends BaseScreen {
   const FreedomModeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Freedom Mode')),
-      body: const Center(child: Text('Freedom Mode Screen')),
-    );
+  String get title => 'Freedom Mode';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Freedom Mode Screen'));
   }
 }

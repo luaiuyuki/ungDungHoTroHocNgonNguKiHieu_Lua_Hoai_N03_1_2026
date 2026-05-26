@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'baseScreen.dart';
 
-class TestModeScreen extends StatelessWidget {
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+class TestModeScreen extends BaseScreen {
   const TestModeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Test Mode')),
-      body: const Center(child: Text('Test Mode Screen')),
-    );
+  String get title => 'Test Mode';
+
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Test Mode Screen'));
   }
 }
