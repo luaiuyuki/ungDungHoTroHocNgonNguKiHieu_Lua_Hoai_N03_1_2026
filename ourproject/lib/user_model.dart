@@ -1,26 +1,29 @@
 // lib/user_model.dart
 import 'package:flutter/foundation.dart';
 
-class User {
-  int uid;
-  String displayName;
+import 'models/base_model.dart';
+
+class User extends BaseModel<int> {
   String level;
   int totalPoints;
 
-  // Constructor: Hàm khởi tạo đối tượng
   User({
-    required this.uid,
-    required this.displayName,
+    required int uid,
+    required String displayName,
+    required String description,
     required this.level,
     required this.totalPoints,
-  });
+  }) : super(
+          id: uid,
+          title: displayName,
+          description: description,
+        );
 
-  // Phương thức hiển thị thông tin cụ thể (Theo yêu cầu Câu 3)
-  void showDetails() {
-    debugPrint("User ID: $uid | Tên: $displayName | Cấp độ: $level | Điểm: $totalPoints");
-  }
-
-  // Ghi đè toString để in nhanh dữ liệu
   @override
-  String toString() => "[$uid] $displayName - $level ($totalPoints pts)";
+  void showInfo() {
+    debugPrint("User ID: $id | "
+        "Tên: $title | "
+        "Level: $level | "
+        "Points: $totalPoints");
+  }
 }
