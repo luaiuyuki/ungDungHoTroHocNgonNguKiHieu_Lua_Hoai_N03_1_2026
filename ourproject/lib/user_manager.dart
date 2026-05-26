@@ -29,11 +29,11 @@ class UserManager {
     try {
       // Tìm user có ID khớp
       var user = listUsers.firstWhere((u) => u.uid == id);
-      
+
       if (newName != null) user.displayName = newName;
       if (newLevel != null) user.level = newLevel;
       if (newPoints != null) user.totalPoints = newPoints;
-      
+
       debugPrint("🔄 Đã cập nhật thông tin cho ID: $id");
     } catch (e) {
       debugPrint("⚠️ Không tìm thấy người dùng có ID: $id để sửa.");
@@ -44,7 +44,7 @@ class UserManager {
   void delete(int id) {
     int initialLength = listUsers.length;
     listUsers.removeWhere((u) => u.uid == id);
-    
+
     if (listUsers.length < initialLength) {
       debugPrint("🗑️ Đã xóa ID: $id thành công.");
     } else {

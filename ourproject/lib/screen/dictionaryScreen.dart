@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
-class DictionaryScreen extends StatelessWidget {
-  const DictionaryScreen({super.key});
+import 'baseScreen.dart';
 
+/// LỚP CHUYÊN BIỆT HÓA (Specialization)
+/// Kế thừa từ lớp tổng quát BaseScreen, tái sử dụng được Scaffold và AppBar
+class PracticeModeScreen extends BaseScreen {
+  const PracticeModeScreen({super.key});
+
+  // Chuyên biệt hóa thuộc tính title
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Dictionary')),
-      body: const Center(child: Text('Dictionary Screen')),
-    );
+  String get title => 'Practice Mode';
+
+  // Chuyên biệt hóa phần nội dung giao diện riêng của màn hình này
+  @override
+  Widget buildBody(BuildContext context) {
+    return const Center(child: Text('Practice Mode Screen'));
   }
 }
