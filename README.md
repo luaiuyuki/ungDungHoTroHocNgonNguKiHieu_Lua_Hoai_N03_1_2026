@@ -49,7 +49,14 @@ Nguyễn Thị Lụa: Trang content
 <img width="689" height="459" alt="4" src="https://github.com/user-attachments/assets/b4370c20-4eb7-4319-ae8c-8e854840a9b5" />
 
 
+# Bài tập thực hành 6:Tính Tổng quát hóa (Generalization)
+- **Lụa:** 
+  - Đảm nhiệm việc kế thừa `BaseScreen` cho các màn hình liên quan đến hệ thống và tài khoản người dùng (ví dụ: `LoginScreen`, `RegisterScreen`, `SettingsScreen`).
+  - Tái sử dụng cấu trúc AppBar chung này và chỉ tập trung phát triển logic giao diện bên trong phần `buildBody` (chứa các TextFields, Buttons, và xử lý logic xác thực).
 
+- **Hoài:** 
+  - Đảm nhiệm việc kế thừa `BaseScreen` cho các màn hình chức năng cốt lõi của ứng dụng (ví dụ: `DashboardScreen`, `DictionaryScreen`, `PracticeModesScreen`).
+  - Tái sử dụng bộ khung để hiển thị tiêu đề các bài học/thử thách, và tự thiết kế nội dung `buildBody` phức tạp hơn bao gồm các lưới (GridView) bài học, danh sách (ListView) từ vựng, và hiển thị tiến độ học tập.
 
 
 
