@@ -94,7 +94,15 @@ class _PracticeModeScreenState extends State<PracticeModeScreen> {
       _correctCount++;
       _showSuccess = true;
     });
-    await _firebase.addLearnedSign(_letters[_currentIndex]);
+    try {
+      await _firebase.addLearnedSign(_letters[_currentIndex]);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save progress. Please check your connection.')),
+        );
+      }
+    }
     await Future.delayed(const Duration(milliseconds: 500)); 
     await Future.delayed(const Duration(seconds: 1)); 
     if (_currentIndex < _letters.length - 1) {

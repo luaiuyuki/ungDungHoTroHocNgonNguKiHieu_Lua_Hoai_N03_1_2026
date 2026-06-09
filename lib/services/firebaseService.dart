@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import '../models/statsModel.dart';
 
 /// Service quản lý toàn bộ kết nối Firebase:
@@ -162,28 +163,38 @@ class FirebaseService {
     final uid = currentUser?.uid;
     if (uid == null) return;
 
-    await _db.ref('users/$uid/stats').set({
-      'bestScore': stats.bestScore,
-      'currentStreak': stats.currentStreak,
-      'lastPracticeDate': stats.lastPracticeDate.toIso8601String(),
-      'learnedSigns': stats.learnedSigns,
-    });
+    try {
+      await _db.ref('users/$uid/stats').set({
+        'bestScore': stats.bestScore,
+        'currentStreak': stats.currentStreak,
+        'lastPracticeDate': stats.lastPracticeDate.toIso8601String(),
+        'learnedSigns': stats.learnedSigns,
+      });
+    } catch (e) {
+      debugPrint('Error saving stats: $e');
+      rethrow; // Rethrow to let UI catch and show SnackBar
+    }
   }
 
   // ─── Stats: Update Best Score ─────────────────────────────────
 
   /// Cập nhật điểm cao nhất nếu [score] vượt qua kỷ lục cũ.
   Future<void> updateBestScore(int score) async {
-    final stats = await getStats() ??
-        StatsModel(
-          bestScore: 0,
-          currentStreak: 0,
-          lastPracticeDate: DateTime.now(),
-          learnedSigns: [],
-        );
-    if (score > stats.bestScore) {
-      stats.bestScore = score;
-      await saveStats(stats);
+    try {
+      final stats = await getStats() ??
+          StatsModel(
+            bestScore: 0,
+            currentStreak: 0,
+            lastPracticeDate: DateTime.now(),
+            learnedSigns: [],
+          );
+      if (score > stats.bestScore) {
+        stats.bestScore = score;
+        await saveStats(stats);
+      }
+    } catch (e) {
+      debugPrint('Error updating best score: $e');
+      rethrow;
     }
   }
 
@@ -194,51 +205,61 @@ class FirebaseService {
   /// - Liên tiếp 1 ngày → tăng streak
   /// - Bỏ qua ≥ 2 ngày → reset về 1
   Future<void> updateStreak() async {
-    final stats = await getStats() ??
-        StatsModel(
-          bestScore: 0,
-          currentStreak: 0,
-          lastPracticeDate: DateTime.now(),
-          learnedSigns: [],
-        );
+    try {
+      final stats = await getStats() ??
+          StatsModel(
+            bestScore: 0,
+            currentStreak: 0,
+            lastPracticeDate: DateTime.now(),
+            learnedSigns: [],
+          );
 
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final lastPractice = DateTime(
-      stats.lastPracticeDate.year,
-      stats.lastPracticeDate.month,
-      stats.lastPracticeDate.day,
-    );
-    final daysDiff = today.difference(lastPractice).inDays;
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final lastPractice = DateTime(
+        stats.lastPracticeDate.year,
+        stats.lastPracticeDate.month,
+        stats.lastPracticeDate.day,
+      );
+      final daysDiff = today.difference(lastPractice).inDays;
 
-    if (stats.currentStreak == 0) {
-      stats.currentStreak = 1; // bắt đầu streak mới
-    } else if (daysDiff == 0) {
-      return; // đã practice hôm nay rồi
-    } else if (daysDiff == 1) {
-      stats.currentStreak++; // tiếp tục streak
-    } else {
-      stats.currentStreak = 1; // streak bị phá, reset về 1
+      if (stats.currentStreak == 0) {
+        stats.currentStreak = 1; // bắt đầu streak mới
+      } else if (daysDiff == 0) {
+        return; // đã practice hôm nay rồi
+      } else if (daysDiff == 1) {
+        stats.currentStreak++; // tiếp tục streak
+      } else {
+        stats.currentStreak = 1; // streak bị phá, reset về 1
+      }
+
+      stats.lastPracticeDate = now;
+      await saveStats(stats);
+    } catch (e) {
+      debugPrint('Error updating streak: $e');
+      rethrow;
     }
-
-    stats.lastPracticeDate = now;
-    await saveStats(stats);
   }
 
   // ─── Stats: Add Learned Sign ──────────────────────────────────
 
   /// Thêm ký hiệu [sign] vào danh sách đã học (nếu chưa có).
   Future<void> addLearnedSign(String sign) async {
-    final stats = await getStats() ??
-        StatsModel(
-          bestScore: 0,
-          currentStreak: 0,
-          lastPracticeDate: DateTime.now(),
-          learnedSigns: [],
-        );
-    if (!stats.learnedSigns.contains(sign)) {
-      stats.learnedSigns.add(sign);
-      await saveStats(stats);
+    try {
+      final stats = await getStats() ??
+          StatsModel(
+            bestScore: 0,
+            currentStreak: 0,
+            lastPracticeDate: DateTime.now(),
+            learnedSigns: [],
+          );
+      if (!stats.learnedSigns.contains(sign)) {
+        stats.learnedSigns.add(sign);
+        await saveStats(stats);
+      }
+    } catch (e) {
+      debugPrint('Error adding learned sign: $e');
+      rethrow;
     }
   }
 }

@@ -79,14 +79,22 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
     }
     setState(() => _isPlaying = false);
     _soundService.playComplete();
-    final stats = await _firebase.getStats();
     bool isNewBest = false;
-    if (stats != null && _score > stats.bestScore) {
-       isNewBest = true;
-       await _firebase.updateBestScore(_score);
-    } else if (stats == null) {
-       isNewBest = true;
-       await _firebase.updateBestScore(_score);
+    try {
+      final stats = await _firebase.getStats();
+      if (stats != null && _score > stats.bestScore) {
+         isNewBest = true;
+         await _firebase.updateBestScore(_score);
+      } else if (stats == null) {
+         isNewBest = true;
+         await _firebase.updateBestScore(_score);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save score. Please check your connection.')),
+        );
+      }
     }
     if (mounted) {
       final isDark = Theme.of(context).brightness == Brightness.dark;

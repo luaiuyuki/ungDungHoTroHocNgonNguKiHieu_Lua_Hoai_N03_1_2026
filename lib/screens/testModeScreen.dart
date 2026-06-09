@@ -111,7 +111,15 @@ class _TestModeScreenState extends State<TestModeScreen> {
   }
   void _showResultsDialog() async {
     final percentage = (_score / _letters.length * 100).round();
-    await _firebase.updateBestScore(_score);
+    try {
+      await _firebase.updateBestScore(_score);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to save score. Please check your connection.')),
+        );
+      }
+    }
     if (mounted) {
       final isDark = Theme.of(context).brightness == Brightness.dark;
       final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
