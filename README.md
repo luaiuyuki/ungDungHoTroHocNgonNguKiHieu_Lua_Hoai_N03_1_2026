@@ -128,7 +128,7 @@ Please refer to the `LICENSE` file for more details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 We would like to express our deepest gratitude to:
 - The [Flutter](https://flutter.dev/) team for providing an exceptional framework.
