@@ -339,7 +339,7 @@ class _TestModeScreenState extends State<TestModeScreen> {
                                 children: [
                                   Text('Score', style: TextStyle(fontSize: 12, color: subTextColor, fontWeight: FontWeight.bold, letterSpacing: 1.0)),
                                   const SizedBox(height: 4),
-                                  Text('$_score/${_currentIndex + 1}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor)),
+                                  Text('$_score', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: textColor)),
                                 ],
                               ),
                               Container(

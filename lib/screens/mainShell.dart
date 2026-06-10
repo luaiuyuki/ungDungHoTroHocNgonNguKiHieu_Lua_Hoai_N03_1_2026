@@ -136,6 +136,9 @@ class _MainShellState extends State<MainShell> {
                     child: InkWell(
                       onTap: _logout,
                       borderRadius: BorderRadius.circular(20),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,

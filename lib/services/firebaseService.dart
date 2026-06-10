@@ -16,8 +16,10 @@ class FirebaseService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseDatabase _db = FirebaseDatabase.instanceFor(
-      app: Firebase.app(),
-      databaseURL: 'https://sasl-app-9d8d3-default-rtdb.asia-southeast1.firebasedatabase.app');
+    app: Firebase.app(),
+    databaseURL:
+        'https://sasl-app-9d8d3-default-rtdb.asia-southeast1.firebasedatabase.app',
+  );
 
   // ─── Current User ─────────────────────────────────────────────
 
@@ -49,16 +51,22 @@ class FirebaseService {
 
       // Khởi tạo dữ liệu profile và stats mặc định trong Realtime Database
       final uid = credential.user!.uid;
-      await _db.ref('users/$uid/profile').set({
-        'username': username.trim(),
-        'createdAt': DateTime.now().toIso8601String(),
-      }).timeout(const Duration(seconds: 10));
-      await _db.ref('users/$uid/stats').set({
-        'bestScore': 0,
-        'currentStreak': 0,
-        'lastPracticeDate': DateTime.now().toIso8601String(),
-        'learnedSigns': [],
-      }).timeout(const Duration(seconds: 10));
+      await _db
+          .ref('users/$uid/profile')
+          .set({
+            'username': username.trim(),
+            'createdAt': DateTime.now().toIso8601String(),
+          })
+          .timeout(const Duration(seconds: 10));
+      await _db
+          .ref('users/$uid/stats')
+          .set({
+            'bestScore': 0,
+            'currentStreak': 0,
+            'lastPracticeDate': DateTime.now().toIso8601String(),
+            'learnedSigns': [],
+          })
+          .timeout(const Duration(seconds: 10));
 
       return null; // thành công
     } on FirebaseAuthException catch (e) {
@@ -179,18 +187,16 @@ class FirebaseService {
   // ─── Stats: Update Best Score ─────────────────────────────────
 
   /// Cập nhật điểm cao nhất nếu [score] vượt qua kỷ lục cũ.
+  /// Dùng Firebase transaction để tránh race condition và không ghi đè data khác.
   Future<void> updateBestScore(int score) async {
+    final uid = currentUser?.uid;
+    if (uid == null) return;
     try {
-      final stats = await getStats() ??
-          StatsModel(
-            bestScore: 0,
-            currentStreak: 0,
-            lastPracticeDate: DateTime.now(),
-            learnedSigns: [],
-          );
-      if (score > stats.bestScore) {
-        stats.bestScore = score;
-        await saveStats(stats);
+      final ref = _db.ref('users/$uid/stats/bestScore');
+      final snapshot = await ref.get();
+      final currentBest = (snapshot.value as num?)?.toInt() ?? 0;
+      if (score > currentBest) {
+        await ref.set(score);
       }
     } catch (e) {
       debugPrint('Error updating best score: $e');
@@ -204,37 +210,46 @@ class FirebaseService {
   /// - Cùng ngày → bỏ qua
   /// - Liên tiếp 1 ngày → tăng streak
   /// - Bỏ qua ≥ 2 ngày → reset về 1
+  /// Chỉ cập nhật streak/lastPracticeDate, không đụng vào bestScore hay learnedSigns.
   Future<void> updateStreak() async {
+    final uid = currentUser?.uid;
+    if (uid == null) return;
     try {
-      final stats = await getStats() ??
-          StatsModel(
-            bestScore: 0,
-            currentStreak: 0,
-            lastPracticeDate: DateTime.now(),
-            learnedSigns: [],
-          );
+      // Chỉ đọc streak và lastPracticeDate, tránh ghi đè toàn bộ stats
+      final streakRef = _db.ref('users/$uid/stats/currentStreak');
+      final dateRef = _db.ref('users/$uid/stats/lastPracticeDate');
+
+      final streakSnap = await streakRef.get();
+      final dateSnap = await dateRef.get();
+
+      final currentStreak = (streakSnap.value as num?)?.toInt() ?? 0;
+      final lastPracticeDate =
+          DateTime.tryParse(dateSnap.value as String? ?? '') ?? DateTime(2000);
 
       final now = DateTime.now();
       final today = DateTime(now.year, now.month, now.day);
       final lastPractice = DateTime(
-        stats.lastPracticeDate.year,
-        stats.lastPracticeDate.month,
-        stats.lastPracticeDate.day,
+        lastPracticeDate.year,
+        lastPracticeDate.month,
+        lastPracticeDate.day,
       );
       final daysDiff = today.difference(lastPractice).inDays;
 
-      if (stats.currentStreak == 0) {
-        stats.currentStreak = 1; // bắt đầu streak mới
+      int newStreak;
+      if (currentStreak == 0) {
+        newStreak = 1; // lần đầu tiên / sau khi bị reset → bắt đầu đếm ngày 1
       } else if (daysDiff == 0) {
-        return; // đã practice hôm nay rồi
+        return; // đã practice hôm nay rồi, không cần cập nhật
       } else if (daysDiff == 1) {
-        stats.currentStreak++; // tiếp tục streak
+        newStreak = currentStreak + 1; // ngày liên tiếp → tiếp tục streak
       } else {
-        stats.currentStreak = 1; // streak bị phá, reset về 1
+        newStreak =
+            0; // bỏ ≥ 1 ngày → streak bị phá, reset về 0 (hôm nay không tính)
       }
 
-      stats.lastPracticeDate = now;
-      await saveStats(stats);
+      // Chỉ ghi 2 trường, không đụng vào bestScore/learnedSigns
+      await streakRef.set(newStreak);
+      await dateRef.set(now.toIso8601String());
     } catch (e) {
       debugPrint('Error updating streak: $e');
       rethrow;
@@ -245,17 +260,24 @@ class FirebaseService {
 
   /// Thêm ký hiệu [sign] vào danh sách đã học (nếu chưa có).
   Future<void> addLearnedSign(String sign) async {
+    final uid = currentUser?.uid;
+    if (uid == null) return;
     try {
-      final stats = await getStats() ??
-          StatsModel(
-            bestScore: 0,
-            currentStreak: 0,
-            lastPracticeDate: DateTime.now(),
-            learnedSigns: [],
-          );
-      if (!stats.learnedSigns.contains(sign)) {
-        stats.learnedSigns.add(sign);
-        await saveStats(stats);
+      // Chỉ đọc/ghi field learnedSigns, không đụng vào bestScore hay streak
+      final ref = _db.ref('users/$uid/stats/learnedSigns');
+      final snapshot = await ref.get();
+
+      List<String> learned = [];
+      final raw = snapshot.value;
+      if (raw is List) {
+        learned = raw.whereType<String>().toList();
+      } else if (raw is Map) {
+        learned = raw.values.whereType<String>().toList();
+      }
+
+      if (!learned.contains(sign)) {
+        learned.add(sign);
+        await ref.set(learned);
       }
     } catch (e) {
       debugPrint('Error adding learned sign: $e');

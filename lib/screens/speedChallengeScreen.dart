@@ -35,6 +35,7 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
   bool _isProcessing = false;
   bool _showSuccess = false;
   bool _showTutorial = false;
+  bool _justCorrect = false; // cooldown flag: chặn nhận diện liên tiếp sau khi đúng
   @override
   void initState() {
     super.initState();
@@ -58,6 +59,7 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
       _isPlaying = true;
       _score = 0;
       _timeLeft = 60;
+      _justCorrect = false;
       _currentTarget = _letters[Random().nextInt(_letters.length)];
     });
     if (_cameraController != null && !_cameraController!.value.isStreamingImages) {
@@ -81,18 +83,23 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
     _soundService.playComplete();
     bool isNewBest = false;
     try {
-      final stats = await _firebase.getStats();
-      if (stats != null && _score > stats.bestScore) {
-         isNewBest = true;
-         await _firebase.updateBestScore(_score);
-      } else if (stats == null) {
-         isNewBest = true;
-         await _firebase.updateBestScore(_score);
+      final uid = _firebase.currentUser?.uid;
+      debugPrint('[SpeedChallenge] uid=$uid, score=$_score');
+      if (uid != null) {
+        final stats = await _firebase.getStats();
+        final currentBest = stats?.bestScore ?? 0;
+        debugPrint('[SpeedChallenge] currentBest=$currentBest, newScore=$_score');
+        if (_score > currentBest) {
+          isNewBest = true;
+        }
+        await _firebase.updateBestScore(_score);
+        debugPrint('[SpeedChallenge] updateBestScore done, isNewBest=$isNewBest');
       }
     } catch (e) {
+      debugPrint('[SpeedChallenge] ERROR saving score: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to save score. Please check your connection.')),
+          SnackBar(content: Text('Failed to save score: $e')),
         );
       }
     }
@@ -134,7 +141,7 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(ctx), // ← dùng ctx (dialog context)
               child: Text('Done', style: TextStyle(color: isDark ? Colors.grey[400] : Colors.grey[600])),
             ),
             ElevatedButton(
@@ -173,15 +180,21 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen> {
             _currentPrediction = result.$1;
             _currentConfidence = result.$2;
           });
-          if (result.$1 == _currentTarget && result.$2 > 0.7) {
+          if (result.$1 == _currentTarget && result.$2 > 0.7 && !_justCorrect) {
+            _justCorrect = true; // chặn frame tiếp theo ngay lập tức
             _soundService.playCorrect();
             setState(() {
               _score++;
               _currentTarget = _letters[Random().nextInt(_letters.length)];
               _showSuccess = true;
             });
-            Future.delayed(const Duration(milliseconds: 500), () {
-              if (mounted) setState(() => _showSuccess = false);
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              if (mounted) {
+                setState(() {
+                  _showSuccess = false;
+                  _justCorrect = false; // mở lại sau 1 giây
+                });
+              }
             });
           }
         }
