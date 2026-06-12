@@ -113,13 +113,8 @@ lib/
 
 ## 📸 Screenshots
 
-*(Please replace the placeholder URLs below with actual image assets when available)*
+https://www.youtube.com/watch?v=Nnkk5ex0Mfc&t=155s
 
-| Dashboard | Dictionary | Test Mode |
-| :---: | :---: | :---: |
-| <img src="https://via.placeholder.com/200x400.png?text=Dashboard" width="200" alt="Dashboard Screen"/> | <img src="https://via.placeholder.com/200x400.png?text=Dictionary" width="200" alt="Dictionary Screen"/> | <img src="https://via.placeholder.com/200x400.png?text=Test+Mode" width="200" alt="Test Mode Screen"/> |
-
----
 
 ## 📜 License
 
