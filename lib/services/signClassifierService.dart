@@ -29,37 +29,48 @@ class SignClassifierService {
       return false;
     }
   }
-  Future<(String, double)?> predict(List<double> landmarks) async {
+  Future<(String, double, Map<String, double>)?> predict(List<double> landmarks) async {
     if (_interpreter == null || _labelMap == null) return null;
     try {
       final features = FeatureExtractor.extractCombinedFeatures(landmarks);
       final mean = _scalerParams!['mean'] as List<double>;
       final scale = _scalerParams!['scale'] as List<double>;
       final featuresScaled = List.generate(features.length, (i) => (features[i] - mean[i]) / scale[i]);
+
       final input = [featuresScaled];
       final output = List.filled(1, List.filled(26, 0.0)).map((e) => List<double>.filled(26, 0.0)).toList();
+
       _interpreter!.run(input, output);
+
       final probas = output[0];
       int predictedIdx = 0;
       double maxProba = probas[0];
-      for (int i = 1; i < probas.length; i++) {
+      final Map<String, double> allProbas = {};
+
+      for (int i = 0; i < probas.length; i++) {
+        final lbl = _labelMap![i] ?? "Unknown";
+        allProbas[lbl] = probas[i];
         if (probas[i] > maxProba) {
           maxProba = probas[i];
           predictedIdx = i;
         }
       }
+
       double confidence = maxProba;
       _history.add(predictedIdx);
       _confidenceHistory.add(confidence);
+
       if (_history.length > _historySize) {
         _history.removeAt(0);
         _confidenceHistory.removeAt(0);
       }
+
       if (_history.length >= 3) {
         final counts = <int, int>{};
         for (var idx in _history) {
           counts[idx] = (counts[idx] ?? 0) + 1;
         }
+
         int mostCommonIdx = predictedIdx;
         int maxCount = 0;
         counts.forEach((idx, count) {
@@ -68,6 +79,7 @@ class SignClassifierService {
             mostCommonIdx = idx;
           }
         });
+
         if (maxCount >= 3) {
           predictedIdx = mostCommonIdx;
           final relevantConf = <double>[];
@@ -79,8 +91,9 @@ class SignClassifierService {
           confidence = relevantConf.reduce((a, b) => a + b) / relevantConf.length;
         }
       }
+
       final label = _labelMap![predictedIdx] ?? "Unknown";
-      return (label, confidence);
+      return (label, confidence, allProbas);
     } catch (e) {
       return null;
     }
